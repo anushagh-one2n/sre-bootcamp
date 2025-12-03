@@ -26,6 +26,11 @@ public class Student {
         this.name = name;
         this.email = email;
         this.grade = grade;
+    }
 
+    public void update(String name, String email, Integer grade) {
+        this.name = name;
+        this.email = email;
+        this.grade = grade;
     }
 }
