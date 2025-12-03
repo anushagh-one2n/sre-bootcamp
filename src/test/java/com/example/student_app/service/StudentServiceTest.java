@@ -3,6 +3,7 @@ package com.example.student_app.service;
 import com.example.student_app.dto.StudentRequest;
 import com.example.student_app.dto.StudentResponse;
 import com.example.student_app.entity.Student;
+import com.example.student_app.exception.StudentNotFoundException;
 import com.example.student_app.repository.StudentRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -84,7 +85,7 @@ class StudentServiceTest {
         when(repository.findById(99L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> service.getById(99L))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(StudentNotFoundException.class)
                 .hasMessageContaining("Student not found with id 99");
 
         verify(repository, times(1)).findById(99L);
@@ -120,7 +121,7 @@ class StudentServiceTest {
         when(repository.findById(42L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> service.update(42L, request))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(StudentNotFoundException.class)
                 .hasMessageContaining("Student not found with id 42");
 
         verify(repository, times(1)).findById(42L);

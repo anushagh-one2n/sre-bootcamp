@@ -3,6 +3,7 @@ package com.example.student_app.service;
 import com.example.student_app.dto.StudentRequest;
 import com.example.student_app.dto.StudentResponse;
 import com.example.student_app.entity.Student;
+import com.example.student_app.exception.StudentNotFoundException;
 import com.example.student_app.repository.StudentRepository;
 import org.springframework.stereotype.Service;
 
@@ -32,13 +33,13 @@ public class StudentService {
 
     public StudentResponse getById(Long id) {
         Student student = repository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Student not found with id " + id));
+                .orElseThrow(() -> new StudentNotFoundException(id));
         return new StudentResponse(student.getId(), student.getName(), student.getEmail(), student.getGrade());
     }
 
     public StudentResponse update(Long id, StudentRequest request) {
         Student existing = repository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Student not found with id " + id));
+                .orElseThrow(() -> new StudentNotFoundException(id));
 
         existing.update(request.name(), request.email(), request.grade());
         Student updated = repository.save(existing);
