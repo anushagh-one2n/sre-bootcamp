@@ -5,6 +5,8 @@ import com.example.student_app.dto.StudentResponse;
 import com.example.student_app.entity.Student;
 import com.example.student_app.exception.StudentNotFoundException;
 import com.example.student_app.repository.StudentRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +15,7 @@ import java.util.List;
 public class StudentService {
 
     private final StudentRepository repository;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public StudentService(StudentRepository repository) {
         this.repository = repository;
@@ -21,6 +24,7 @@ public class StudentService {
     public StudentResponse create(StudentRequest request) {
         Student student = new Student(request.name(), request.email(), request.grade());
         Student saved = repository.save(student);
+        logger.debug("Saved new student with id- {}", saved.getId());
         return new StudentResponse(saved.getId(), saved.getName(), saved.getEmail(), saved.getGrade());
     }
 
@@ -43,6 +47,8 @@ public class StudentService {
 
         existing.update(request.name(), request.email(), request.grade());
         Student updated = repository.save(existing);
+
+        logger.debug("Updated student with id- {}", updated.getId());
 
         return new StudentResponse(updated.getId(), updated.getName(), updated.getEmail(), updated.getGrade());
     }
