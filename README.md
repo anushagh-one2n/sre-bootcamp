@@ -34,11 +34,15 @@ different tech(i.e., on prem, using k8s etc.).
     - `./gradlew bootRun` in case you set the db creds as env vars
 
 **Running the app using `make`**
+
 - Copy the `.env.example` file into `.env` file and set your env vars there.
 - Ensure that the postgres db instance is up. You can run it using the make command: `make db-up`.
+- You can also apply db migrations using `make migrate`.
 - To run locally:
     - make build
     - make run-local
 - To run on docker:
     - make docker-build
-    - make docker-run
+    - make docker-run (PS: this will run the postgres instance if it is not already running, apply migrations, build the
+      image if not already done, and then run the app)
+- To shut down all services(db, app) run `make docker-down`.
