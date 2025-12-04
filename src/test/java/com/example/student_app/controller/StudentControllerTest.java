@@ -48,7 +48,7 @@ class StudentControllerTest {
         mockMvc.perform(post("/api/v1/students")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.name").value("Alice"))
                 .andExpect(jsonPath("$.email").value("alice@example.com"))
