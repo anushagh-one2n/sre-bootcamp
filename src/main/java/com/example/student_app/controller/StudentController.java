@@ -3,11 +3,9 @@ package com.example.student_app.controller;
 import com.example.student_app.dto.StudentRequest;
 import com.example.student_app.dto.StudentResponse;
 import com.example.student_app.service.StudentService;
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-
 
 @RestController
 @SuppressWarnings("unused")
@@ -37,7 +35,8 @@ public class StudentController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<StudentResponse> update(@PathVariable Long id, @RequestBody StudentRequest request) {
+    public ResponseEntity<StudentResponse> update(
+            @PathVariable Long id, @RequestBody StudentRequest request) {
         return ResponseEntity.ok(service.update(id, request));
     }
 

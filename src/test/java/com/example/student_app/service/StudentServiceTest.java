@@ -1,10 +1,16 @@
 package com.example.student_app.service;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
+
 import com.example.student_app.dto.StudentRequest;
 import com.example.student_app.dto.StudentResponse;
 import com.example.student_app.entity.Student;
 import com.example.student_app.exception.StudentNotFoundException;
 import com.example.student_app.repository.StudentRepository;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -12,21 +18,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
-
 @ExtendWith(MockitoExtension.class)
 class StudentServiceTest {
 
-    @Mock
-    private StudentRepository repository;
+    @Mock private StudentRepository repository;
 
-    @InjectMocks
-    private StudentService service;
+    @InjectMocks private StudentService service;
 
     @Test
     void create_shouldSaveStudentAndReturnResponse() {
@@ -35,9 +32,7 @@ class StudentServiceTest {
 
         when(repository.save(any(Student.class))).thenReturn(saved);
 
-
         StudentResponse response = service.create(request);
-
 
         ArgumentCaptor<Student> studentCaptor = ArgumentCaptor.forClass(Student.class);
         verify(repository, times(1)).save(studentCaptor.capture());

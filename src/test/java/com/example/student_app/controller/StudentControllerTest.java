@@ -1,9 +1,17 @@
 package com.example.student_app.controller;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.example.student_app.dto.StudentRequest;
 import com.example.student_app.dto.StudentResponse;
 import com.example.student_app.service.StudentService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -14,29 +22,16 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.List;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(StudentController.class)
 @SuppressWarnings("unused")
 class StudentControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+    @Autowired private MockMvc mockMvc;
 
-    @MockitoBean
-    private StudentService service;
+    @MockitoBean private StudentService service;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    @Autowired private ObjectMapper objectMapper;
 
     @Test
     void create_shouldReturnCreatedStudent() throws Exception {
@@ -45,9 +40,10 @@ class StudentControllerTest {
 
         given(service.create(any(StudentRequest.class))).willReturn(response);
 
-        mockMvc.perform(post("/api/v1/students")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
+        mockMvc.perform(
+                        post("/api/v1/students")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.name").value("Alice"))
@@ -57,10 +53,10 @@ class StudentControllerTest {
 
     @Test
     void getAll_shouldReturnListOfStudents() throws Exception {
-        List<StudentResponse> responses = List.of(
-                new StudentResponse(1L, "A", "a@example.com", 7),
-                new StudentResponse(2L, "B", "b@example.com", 8)
-        );
+        List<StudentResponse> responses =
+                List.of(
+                        new StudentResponse(1L, "A", "a@example.com", 7),
+                        new StudentResponse(2L, "B", "b@example.com", 8));
 
         given(service.getAll()).willReturn(responses);
 
@@ -92,9 +88,10 @@ class StudentControllerTest {
 
         given(service.update(eq(1L), any(StudentRequest.class))).willReturn(response);
 
-        mockMvc.perform(put("/api/v1/students/1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
+        mockMvc.perform(
+                        put("/api/v1/students/1")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.name").value("Updated"))
@@ -104,8 +101,7 @@ class StudentControllerTest {
 
     @Test
     void delete_shouldReturnNoContent() throws Exception {
-        mockMvc.perform(delete("/api/v1/students/1"))
-                .andExpect(status().isNoContent());
+        mockMvc.perform(delete("/api/v1/students/1")).andExpect(status().isNoContent());
 
         Mockito.verify(service).delete(1L);
     }
