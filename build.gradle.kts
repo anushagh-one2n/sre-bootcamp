@@ -2,6 +2,7 @@ plugins {
     java
     id("org.springframework.boot") version "3.5.7"
     id("io.spring.dependency-management") version "1.1.7"
+    id("com.diffplug.spotless") version "8.1.0"
 }
 
 group = "com.example"
@@ -45,5 +46,20 @@ tasks.withType<Test> {
 tasks.register("printVersion") {
     doLast {
         println(project.version)
+    }
+}
+
+spotless {
+    java {
+        target("src/**/*.java")
+        googleJavaFormat("1.17.0").aosp().reflowLongStrings().skipJavadocFormatting()
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+
+    format("misc") {
+        target("*.md", ".gitignore")
+        trimTrailingWhitespace()
+        endWithNewline()
     }
 }
