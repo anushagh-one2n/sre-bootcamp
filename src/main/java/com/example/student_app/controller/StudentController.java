@@ -12,6 +12,7 @@ import java.util.List;
 
 
 @RestController
+@SuppressWarnings("unused")
 @RequestMapping("/api/v1/students")
 public class StudentController {
 

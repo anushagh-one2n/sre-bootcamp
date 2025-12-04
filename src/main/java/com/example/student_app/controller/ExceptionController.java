@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.Instant;
 
+@SuppressWarnings("unused")
 @RestControllerAdvice
 public class ExceptionController {
 
