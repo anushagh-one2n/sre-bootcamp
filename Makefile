@@ -4,20 +4,21 @@ VERSION ?= $(shell ./gradlew -q printVersion)
 IMAGE_NAME ?= student-app
 IMAGE_TAG ?= $(IMAGE_NAME):$(VERSION)
 
-JAR_FILE=build/libs/$(APP_NAME)-$(VERSION).jar
+COMPOSE = docker compose
 
-.PHONY: help build run-local test clean db-up db-down docker-build docker-run
+.PHONY: help build run-local test clean db-up migrate docker-build docker-run docker-down
 
 help:
 	@echo "Available commands:"
-	@echo "  make build          - Build the application (Gradle)"
+	@echo "  make build          - Build the app with Gradle"
 	@echo "  make run-local      - Run the app locally with java -jar (non-docker)"
 	@echo "  make test           - Run unit tests"
 	@echo "  make clean          - Clean build artifacts"
-	@echo "  make db-up          - Start local Postgres in Docker"
-	@echo "  make db-down        - Stop local Postgres"
-	@echo "  make docker-build   - Build Docker image $(IMAGE_TAG)"
-	@echo "  make docker-run     - Run Docker container from $(IMAGE_TAG)"
+	@echo "  make db-up          - Start Postgres via docker-compose"
+	@echo "  make migrate        - Run Flyway DB migrations via docker-compose"
+	@echo "  make docker-build   - Build REST API Docker image"
+	@echo "  make docker-run     - Start DB, run migrations, and start API"
+	@echo "  make docker-down    - Stop all docker-compose services"
 
 build:
 	./gradlew clean build
@@ -35,31 +36,18 @@ clean:
 
 db-up:
 	@if [ ! -f $(ENV_FILE) ]; then echo "Missing .env file. Create one first."; exit 1; fi
-	@set -a && source $(ENV_FILE) && set +a && \
-	docker run --name student-db \
-		-e POSTGRES_USER="$$DB_USERNAME" \
-		-e POSTGRES_PASSWORD="$$DB_PASSWORD" \
-		-e POSTGRES_DB="$$DB_NAME" \
-		-p $$DB_PORT:$$DB_PORT \
-		-d postgres:15
+	$(COMPOSE) up -d postgres
 
-db-down:
+migrate:
 	@if [ ! -f $(ENV_FILE) ]; then echo "Missing .env file. Create one first."; exit 1; fi
-	@set -a && source $(ENV_FILE) && set +a && \
-	docker stop "$$DB_NAME" || true
-	docker rm "$$DB_NAME" || true
+	$(COMPOSE) run --rm flyway
 
 docker-build:
-	./gradlew clean bootJar
-	docker build -t $(IMAGE_TAG) .
-
-docker-run:
 	@if [ ! -f $(ENV_FILE) ]; then echo "Missing .env file. Create one first."; exit 1; fi
-	@set -a && source $(ENV_FILE) && set +a && \
-	docker run --rm \
-	  -p $$SERVER_PORT:$$SERVER_PORT \
-	  -e DB_URL="$$DB_URL" \
-	  -e DB_USERNAME="$$DB_USERNAME" \
-	  -e DB_PASSWORD="$$DB_PASSWORD" \
-	  -e SERVER_PORT="$$SERVER_PORT" \
-	  $(IMAGE_TAG)
+	VERSION=$(VERSION) $(COMPOSE) build api
+
+docker-run: db-up migrate docker-build
+	VERSION=$(VERSION) $(COMPOSE) up -d api
+
+docker-down:
+	$(COMPOSE) down

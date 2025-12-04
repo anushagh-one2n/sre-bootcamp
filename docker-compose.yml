@@ -1,0 +1,55 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: student-db
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $DB_USERNAME -d $DB_NAME" ]
+      interval: 10s
+      timeout: 5s
+      retries:
+        5
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  flyway:
+    image: flyway/flyway:10-alpine
+    container_name: students-flyway
+    depends_on:
+      - postgres
+    command:
+      - -url=jdbc:postgresql://postgres:5432/${DB_NAME}
+      - -user=${DB_USERNAME}
+      - -password=${DB_PASSWORD}
+      - -locations=filesystem:/flyway/sql
+      - migrate
+    volumes:
+      - ./src/main/resources/postgres/migration:/flyway/sql:ro
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: student-app:${APP_VERSION:-0.0.1}
+    container_name: student-app
+    depends_on:
+      - postgres
+      - flyway
+    environment:
+      DB_HOST: postgres
+      DB_PORT: ${DB_PORT:-5432}
+      DB_NAME: ${DB_NAME}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_URL: ${DB_URL}
+      SERVER_PORT: ${SERVER_PORT:-8080}
+    ports:
+      - "${SERVER_PORT:-8080}:${SERVER_PORT:-8080}"
+
+volumes:
+  postgres-data:
