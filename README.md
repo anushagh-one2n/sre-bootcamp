@@ -20,6 +20,7 @@ different tech(i.e., on prem, using k8s etc.).
 - Java 21
 - Gradle 8.14.3
 - Docker
+- GNU Make 3.81
 
 ### Running the application:
 
@@ -28,10 +29,16 @@ different tech(i.e., on prem, using k8s etc.).
     - You can supply the db creds, url in the application-local.yml to run the application locally.
     - You can also optionally choose to set them as env vars(`DB_PASSWORD`, `DB_USERNAME`, `DB_URL`) and then run
       the application.
-    - You can also copy the `.env.example` file as `.env` and set your vars there. **PS**: setting vars in
-      `.env.example`
-      won't help as the make file will pick up these values only from `.env` file present in the root dir.
 3. Command to run the app:
     - `SPRING_PROFILES_ACTIVE=local ./gradlew bootRun` in case you set the db creds in application-local.yml
     - `./gradlew bootRun` in case you set the db creds as env vars
-    - `make run` in case you have an .env file
+
+**Running the app using `make`**
+- Copy the `.env.example` file into `.env` file and set your env vars there.
+- Ensure that the postgres db instance is up. You can run it using the make command: `make db-up`.
+- To run locally:
+    - make build
+    - make run-local
+- To run on docker:
+    - make docker-build
+    - make docker-run
