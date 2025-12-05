@@ -6,7 +6,7 @@ IMAGE_TAG ?= $(IMAGE_NAME):$(VERSION)
 
 COMPOSE = docker compose
 
-.PHONY: help build run-local test clean db-up migrate docker-build docker-run docker-down
+.PHONY: help build run-local test clean db-up migrate docker-build docker-run docker-down docker-push lint-check
 
 help:
 	@echo "Available commands:"
@@ -19,6 +19,8 @@ help:
 	@echo "  make docker-build   - Build REST API Docker image"
 	@echo "  make docker-run     - Start DB, run migrations, and start API"
 	@echo "  make docker-down    - Stop all docker-compose services"
+	@echo "  make docker-push    - Push Docker image to registry"
+	@echo "  make lint-check     - Run code formatting / linting (Spotless) check"
 
 build:
 	./gradlew clean build
@@ -51,3 +53,11 @@ docker-run: db-up migrate docker-build
 
 docker-down:
 	$(COMPOSE) down
+
+docker-push:
+	@if [ -z "$(DOCKER_REPO)" ]; then echo "DOCKER_REPO must be set (e.g. myuser/student-app)"; exit 1; fi
+	docker tag $(IMAGE_TAG) $(DOCKER_REPO):$(VERSION)
+	docker push $(DOCKER_REPO):$(VERSION)
+
+lint-check:
+	./gradlew spotlessCheck
