@@ -19,27 +19,31 @@ services:
 
   flyway:
     image: flyway/flyway:10-alpine
+    platform: linux/amd64
     container_name: students-flyway
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     command:
-      - -url=jdbc:postgresql://postgres:5432/${DB_NAME}
+      - -url=${DB_URL}
       - -user=${DB_USERNAME}
       - -password=${DB_PASSWORD}
       - -locations=filesystem:/flyway/sql
       - migrate
     volumes:
-      - ./src/main/resources/postgres/migration:/flyway/sql:ro
+      - ./src/main/resources/db/migration:/flyway/sql:ro
 
   api:
     build:
       context: .
       dockerfile: Dockerfile
-    image: student-app:${APP_VERSION:-0.0.1}
+    image: student-app:${VERSION:-0.0.1}
     container_name: student-app
     depends_on:
-      - postgres
-      - flyway
+      postgres:
+        condition: service_healthy
+      flyway:
+        condition: service_completed_successfully
     environment:
       DB_HOST: postgres
       DB_PORT: ${DB_PORT:-5432}

@@ -33,10 +33,4 @@ USER ${APP_USER}
 
 EXPOSE 8080
 
-# Default env vars (overridable at runtime)
-ENV SERVER_PORT=8080
-ENV DB_URL=""
-ENV DB_USERNAME=""
-ENV DB_PASSWORD=""
-
 ENTRYPOINT ["java", "-jar", "app.jar"]
