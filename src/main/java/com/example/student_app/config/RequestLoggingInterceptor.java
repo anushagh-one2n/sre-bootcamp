@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -14,7 +15,9 @@ public class RequestLoggingInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(
-            HttpServletRequest request, HttpServletResponse response, Object handler) {
+            @NonNull HttpServletRequest request,
+            @NonNull HttpServletResponse response,
+            @NonNull Object handler) {
         log.info("Incoming request: {} {}", request.getMethod(), request.getRequestURI());
         return true;
     }
@@ -23,7 +26,7 @@ public class RequestLoggingInterceptor implements HandlerInterceptor {
     public void afterCompletion(
             HttpServletRequest request,
             HttpServletResponse response,
-            Object handler,
+            @NonNull Object handler,
             Exception ex) {
 
         log.info(
