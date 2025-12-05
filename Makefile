@@ -7,7 +7,7 @@ JAR_FILE=build/libs/$(APP_NAME)-$(VERSION).jar
 
 COMPOSE = docker compose
 
-.PHONY: help build run-local test clean db-up migrate docker-build docker-run docker-down lint-check
+.PHONY: help build run-local test clean db-up migrate docker-build docker-run docker-down lint-check docker-push
 
 help:
 	@echo "Available commands:"
@@ -21,6 +21,7 @@ help:
 	@echo "  make docker-run     - Start DB, run migrations, and start API"
 	@echo "  make docker-down    - Stop all docker-compose services"
 	@echo "  make lint-check     - Run code formatting / linting (Spotless) check"
+	@echo "  make docker-push    - Push Docker image to registry"
 
 build:
 	./gradlew clean build
@@ -56,3 +57,8 @@ docker-down:
 
 lint-check:
 	./gradlew spotlessCheck
+
+docker-push:
+	@if [ -z "$(DOCKER_REPO)" ]; then echo "DOCKER_REPO must be set (e.g. myuser/student-app)"; exit 1; fi
+	docker tag $(IMAGE_TAG) $(DOCKER_REPO):$(VERSION)
+	docker push $(DOCKER_REPO):$(VERSION)
