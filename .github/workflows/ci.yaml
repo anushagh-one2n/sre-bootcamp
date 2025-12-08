@@ -1,4 +1,4 @@
-name: CI - Build, Test, Lint, Docker
+name: CI - Check and build image
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
   workflow_dispatch: {}
 
 jobs:
-  build_test_lint:
+  lint_test_build:
     runs-on: self-hosted
 
     steps:
@@ -26,10 +26,10 @@ jobs:
 
   docker_publish:
     runs-on: self-hosted
-    needs: build_test_lint   # <- this enforces the dependency
+    needs: lint_test_build
 
     env:
-      DOCKER_REPO: ${{ secrets.DOCKER_REPO }}  # e.g. "yourname/student-app"
+      DOCKER_REPO: ${{ secrets.DOCKER_REPO }}
 
     steps:
       - name: Checkout code
