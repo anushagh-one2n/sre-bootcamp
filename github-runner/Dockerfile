@@ -1,5 +1,4 @@
-FROM --platform=linux/amd64 ubuntu:20.04
-
+FROM ubuntu:20.04
 
 # Avoid interactive prompts
 ENV DEBIAN_FRONTEND=noninteractive
@@ -20,7 +19,7 @@ WORKDIR /runner
 # You can update RUNNER_VERSION over time as needed.
 ENV RUNNER_VERSION=2.329.0
 RUN curl -L -o actions-runner.tar.gz \
-      https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz \
+      https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-arm64-${RUNNER_VERSION}.tar.gz \
     && tar xzf actions-runner.tar.gz \
     && rm actions-runner.tar.gz
 
