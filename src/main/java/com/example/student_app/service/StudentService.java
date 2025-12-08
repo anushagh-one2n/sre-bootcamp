@@ -37,6 +37,7 @@ public class StudentService {
     public StudentResponse getById(Long id) {
         Student student =
                 repository.findById(id).orElseThrow(() -> new StudentNotFoundException(id));
+        logger.debug("Fetched student with id- {}", student.getId());
         return new StudentResponse(
                 student.getId(), student.getName(), student.getEmail(), student.getGrade());
     }
