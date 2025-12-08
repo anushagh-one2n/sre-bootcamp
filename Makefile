@@ -46,7 +46,6 @@ migrate:
 	$(COMPOSE) run --rm flyway
 
 docker-build:
-	@if [ ! -f $(ENV_FILE) ]; then echo "Missing .env file. Create one first."; exit 1; fi
 	VERSION=$(VERSION) $(COMPOSE) build api
 
 docker-run: db-up migrate docker-build
