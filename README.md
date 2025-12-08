@@ -49,4 +49,4 @@ different tech(i.e., on prem, using k8s etc.).
 
 
 ## Running CI on self-hosted runner:
-- Refer to [README](github-runner/README.md) for setting up self-hosted GitHub runner for running the CI workflow. 
+- Refer to [README](github-runner/README.md) for setting up self-hosted GitHub runner for running the CI workflow.
