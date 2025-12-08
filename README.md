@@ -46,3 +46,7 @@ different tech(i.e., on prem, using k8s etc.).
     - make docker-run (PS: this will run the postgres instance if it is not already running, apply migrations, build the
       image if not already done, and then run the app)
 - To shut down all services(db, app) run `make docker-down`.
+
+
+## Running CI on self-hosted runner:
+- Refer to [README](github-runner/README.md) for setting up self-hosted GitHub runner for running the CI workflow. 
