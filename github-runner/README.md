@@ -1,10 +1,10 @@
 ## Running CI workflow on a self-hosted runner
 
-Currently, the CI workflow(present in [the workflows dir](.github/workflows)) is configured to run on a self-hosted
+Currently, the CI workflow(present in [the workflows dir](../.github/workflows)) is configured to run on a self-hosted
 runner.
 
 - You can use the `make` command: `make docker-run` to start the GitHub runner in a docker container.
-- Make sure you have copied the [.env.example file](github-runner/.env.example) over as `.env` and set the env variables
+- Make sure you have copied the [.env.example file](../github-runner/.env.example) over as `.env` and set the env variables
   accordingly before running the docker container.
 
 ### About the CI workflow:
