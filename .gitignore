@@ -6,6 +6,7 @@ build/
 !**/src/test/**/build/
 .env
 github-runner/runner-data/
+deploy-vagrant/.vagrant/
 
 ### STS ###
 .apt_generated
