@@ -10,12 +10,12 @@ kind: Secret
 metadata:
   name: db-credentials
   namespace: student-api
-type: Opaque
 stringData:
-  POSTGRES_DB: student-db
-  POSTGRES_USER: postgres
-  POSTGRES_PASSWORD: postgres
-  POSTGRES_PORT: "5432"
+  DB_NAME: "${DB_NAME}"
+  DB_USERNAME: "${DB_USERNAME}"
+  DB_PASSWORD: "${DB_PASSWORD}"
+  DB_PORT: "${DB_PORT}"
+  DB_URL: "${DB_URL}"
 
 ---
 
@@ -46,17 +46,17 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: db-credentials
-                  key: POSTGRES_DB
+                  key: DB_NAME
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
                   name: db-credentials
-                  key: POSTGRES_USER
+                  key: DB_USERNAME
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: db-credentials
-                  key: POSTGRES_PASSWORD
+                  key: DB_PASSWORD
 
 ---
 
