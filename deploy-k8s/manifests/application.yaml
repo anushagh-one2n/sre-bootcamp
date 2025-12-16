@@ -48,12 +48,13 @@ spec:
 
 ---
 
-#TODO: Use ingress instead of node port
 apiVersion: v1
 kind: Service
 metadata:
   name: student-api
   namespace: student-api
+  annotations:
+    nginx.ingress.kubernetes.io/load-balance: "least_conn"
 spec:
   selector:
     app: student-api-app
@@ -61,4 +62,4 @@ spec:
     - protocol: TCP
       port: 80
       targetPort: 8080
-  type: NodePort
+  type: ClusterIP

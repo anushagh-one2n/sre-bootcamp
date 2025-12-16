@@ -13,9 +13,13 @@ kubectl apply -f manifests/database.yaml
 
 kubectl apply -f manifests/application.yaml
 
+kubectl apply -f manifests/ingress.yaml
+
 kubectl create secret generic db-credentials \
   --from-env-file=secrets/db.env \
   -n student-api \
   --dry-run=client -o yaml | kubectl apply -f -
 
 echo "Secrets created successfully."
+
+minikube addons enable ingress --profile minii-cluster
