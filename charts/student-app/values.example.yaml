@@ -1,0 +1,26 @@
+application:
+  env: "local"
+  image: "<repo>/<image>:<tag>"
+  configMap:
+    port: "8080"
+    dbPort: "5432"
+    dbHost: "postgres.student-api-local.svc.cluster.local"
+    dbName: "student-db"
+
+  deployment:
+    replicaCount: "2"
+
+database:
+  name: "student-db"
+  username: "postgres"
+  password: "postgres"
+  port: "5432"
+  url: "jdbc:postgresql://postgres.student-api-local.svc.cluster.local:5432/student-db"
+
+ingress:
+  className: "nginx"
+  hosts:
+    - host: "student-api.local"
+      paths:
+        - path: "/"
+          pathType: "Prefix"
