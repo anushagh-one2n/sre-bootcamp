@@ -1,0 +1,6 @@
+{
+  "bound_service_account_names": ["student-api-sa"],
+  "bound_service_account_namespaces": ["student-api"],
+  "policies": ["read-secret-policy"],
+  "ttl": "24h"
+}
