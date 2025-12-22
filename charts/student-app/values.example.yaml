@@ -26,7 +26,6 @@ database:
   url: "jdbc:postgresql://postgres.student-api-staging.svc.cluster.local:5432/student-db"
 
 ingress:
-  enabled: true
   className: nginx
   hosts:
     - host: student-api.local
