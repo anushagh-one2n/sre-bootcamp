@@ -1,26 +1,35 @@
 application:
-  env: "local"
-  image: "<repo>/<image>:<tag>"
+  env: staging
+
+  image:
+    repository: <username>/<repo>
+    tag: latest
+    pullPolicy: IfNotPresent
+    pullSecrets:
+      - dockerhub-creds
+
+  deployment:
+    replicaCount: 2
+
   configMap:
     port: "8080"
     dbPort: "5432"
-    dbHost: "postgres.student-api-local.svc.cluster.local"
+    dbHost: "postgres.student-api-staging.svc.cluster.local"
     dbName: "student-db"
 
-  deployment:
-    replicaCount: "2"
-
 database:
-  name: "student-db"
-  username: "postgres"
-  password: "postgres"
-  port: "5432"
-  url: "jdbc:postgresql://postgres.student-api-local.svc.cluster.local:5432/student-db"
+  image: postgres:15
+  name: student-db
+  username: postgres
+  password: supersecret
+  port: 5432
+  url: "jdbc:postgresql://postgres.student-api-staging.svc.cluster.local:5432/student-db"
 
 ingress:
-  className: "nginx"
+  enabled: true
+  className: nginx
   hosts:
-    - host: "student-api.local"
+    - host: student-api.local
       paths:
-        - path: "/"
-          pathType: "Prefix"
+        - path: /
+          pathType: Prefix
