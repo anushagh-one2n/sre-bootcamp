@@ -63,6 +63,13 @@ echo "[5/6] Running Vault configuration apply.sh..."
 chmod +x vault/apply.sh
 ./vault/apply.sh
 
+###############################################
+# 5.1. SEED VAULT SECRETS
+###############################################
+echo "[5.1/6] Seeding Vault secrets..."
+chmod +x vault/seed-secrets.sh
+./vault/seed-secrets.sh
+
 
 ###############################################
 # 6. INSTALL APPLICATION
