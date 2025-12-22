@@ -6,9 +6,5 @@ server:
   dataStorage:
     enabled: false
 
-  # UI enabled
   ui:
     enabled: true
-
-  ingress:
-    enabled: false
