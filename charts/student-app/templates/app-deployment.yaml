@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: student-api-app
+spec:
+  replicas: {{ .Values.application.deployment.replicaCount }}
+  selector:
+    matchLabels:
+      app: student-api-app
+  template:
+    metadata:
+      labels:
+        app: student-api-app
+    spec:
+      {{- if .Values.application.image.pullSecrets }}
+      imagePullSecrets:
+        {{- range .Values.application.image.pullSecrets }}
+        - name: {{ . }}
+        {{- end }}
+      {{- end }}
+      containers:
+        - name: student-api
+          image: "{{ .Values.application.image.repository }}:{{ .Values.application.image.tag }}"
+          imagePullPolicy: {{ .Values.application.image.pullPolicy }}
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: app-config
+            - secretRef:
+                name: db-credentials
