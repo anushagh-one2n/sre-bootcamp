@@ -4,9 +4,9 @@ set -euo pipefail
 
 minikube start --driver="docker" --nodes=3 -p minii-cluster
 
-kubectl label node minii-cluster type=application
-kubectl label node minii-cluster-m02 type=database
-kubectl label node minii-cluster-m03 type=dependent_service
+kubectl label node minii-cluster type=application --overwrite
+kubectl label node minii-cluster-m02 type=database  --overwrite
+kubectl label node minii-cluster-m03 type=dependent_service  --overwrite
 
 minikube addons enable ingress -p minii-cluster
 
@@ -19,23 +19,23 @@ echo "======================================================"
 ##################################################
 echo "[1/6] Installing External Secrets Operator..."
 
-helm repo add external-secrets https://charts.external-secrets.io >/dev/null 2>&1
+helm repo add external-secrets https://charts.external-secrets.io --force-update >/dev/null 2>&1
 helm repo update >/dev/null 2>&1
 
 helm upgrade --install external-secrets external-secrets/external-secrets \
-  -n external-secrets --create-namespace
+  -n external-secrets --create-namespace --wait
 
 
 ##################################################
 #### 2. INSTALL VAULT VIA HELM (NOT CONFIGURED YET)
 ##################################################
 echo "[2/6] Installing Vault..."
-helm repo add hashicorp https://helm.releases.hashicorp.com >/dev/null 2>&1
+helm repo add hashicorp https://helm.releases.hashicorp.com --force-update >/dev/null 2>&1
 helm repo update >/dev/null 2>&1
 
 helm upgrade --install vault hashicorp/vault \
   -n vault --create-namespace \
-  -f vault/values-dev.yaml
+  -f vault/values-dev.yaml --wait
 
 
 #################################################
@@ -44,7 +44,7 @@ helm upgrade --install vault hashicorp/vault \
 echo "[3/6] Installing infra chart..."
 
 helm upgrade --install infra ../charts/infra \
-  -n infra --create-namespace
+  -n infra --create-namespace --wait
 
 ################################################
 ## 4. WAIT FOR VAULT TO BE READY
@@ -76,7 +76,7 @@ chmod +x vault/seed-secrets.sh
 ###############################################
 echo "[6/6] Installing student-api chart..."
 
-helm install student-app ../charts/student-app \
+helm upgrade --install student-app ../charts/student-app \
   -n student-api-staging --create-namespace \
   --set image.pullSecrets[0]=dockerhub-creds
 
