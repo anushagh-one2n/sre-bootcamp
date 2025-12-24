@@ -8,6 +8,7 @@ build/
 github-runner/runner-data/
 deploy-vagrant/.vagrant/
 deploy-k8s/secrets/*.env
+charts/student-app/values.yaml
 
 ### STS ###
 .apt_generated
