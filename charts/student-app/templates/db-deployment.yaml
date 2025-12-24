@@ -20,8 +20,8 @@ spec:
           env:
             - name: POSTGRES_DB
               valueFrom:
-                secretKeyRef:
-                  name: db-credentials
+                configMapKeyRef:
+                  name: app-config
                   key: DB_NAME
             - name: POSTGRES_USER
               valueFrom:
