@@ -23,7 +23,7 @@ database:
   username: postgres
   password: supersecret
   port: 5432
-  url: "jdbc:postgresql://postgres.student-api-staging.svc.cluster.local:5432/student-db"
+  url: "jdbc:postgresql://postgres:5432/student-db"
 
 ingress:
   className: nginx
