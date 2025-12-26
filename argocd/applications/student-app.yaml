@@ -16,6 +16,7 @@ spec:
     path: charts/student-app
     helm:
       releaseName: student-app
+      namespace: student-api-staging
       valueFiles:
         - values.yaml
 
