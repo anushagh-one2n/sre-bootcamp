@@ -5,10 +5,8 @@ metadata:
   namespace: argocd
 spec:
   project: default
-  nodeSelector:
-    type: dependent_service
   source:
-    repoURL: <placeholder for now>
+    repoURL: https://github.com/anushagh-one2n/sre-bootcamp.git
     targetRevision: main
     path: argocd/applications
 
