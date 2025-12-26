@@ -20,8 +20,6 @@ application:
 database:
   image: postgres:15
   name: student-db
-  username: postgres
-  password: supersecret
   port: 5432
   url: "jdbc:postgresql://postgres:5432/student-db"
 
