@@ -31,6 +31,10 @@ set +a
 : "${DB_USERNAME:?Missing DB_USERNAME}"
 : "${DB_PASSWORD:?Missing DB_PASSWORD}"
 
+: "${GH_TOKEN:?Missing GH_TOKEN}"
+: "${GH_USERNAME:?Missing GH_USERNAME}"
+: "${GH_REPO_URL:?Missing GH_REPO_URL}"
+
 ###############################################
 # Verify Vault connectivity
 ###############################################
@@ -47,4 +51,10 @@ vault kv put secret/dockerhub \
 vault kv put secret/student-api/db \
   username=$DB_USERNAME \
   password=$DB_PASSWORD
+
+vault kv put secret/argocd/github \
+  token=$GH_TOKEN \
+  username=$GH_USERNAME \
+  url=$GH_REPO_URL
+
 "
