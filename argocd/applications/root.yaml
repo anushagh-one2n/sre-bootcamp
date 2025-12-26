@@ -7,7 +7,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/anushagh-one2n/sre-bootcamp.git
-    targetRevision: main
+    targetRevision: Milestone-9
     path: argocd/applications
 
   destination:

@@ -12,7 +12,7 @@ spec:
 
   source:
     repoURL: https://github.com/anushagh-one2n/sre-bootcamp.git
-    targetRevision: main
+    targetRevision: Milestone-9
     path: charts/student-app
     helm:
       releaseName: student-app
