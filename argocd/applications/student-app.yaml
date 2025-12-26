@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: student-app
+  namespace: argocd
+spec:
+  project: default
+
+  destination:
+    namespace: student-api-staging
+    server: https://kubernetes.default.svc
+
+  source:
+    repoURL: https://github.com/anushagh-one2n/sre-bootcamp.git
+    targetRevision: main
+    path: charts/student-app
+    helm:
+      releaseName: student-app
+      valueFiles:
+        - values.yaml
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
