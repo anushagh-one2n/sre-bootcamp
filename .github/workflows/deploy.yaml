@@ -1,0 +1,40 @@
+name: GitOps Update
+
+on:
+  workflow_run:
+    workflows: ["CI - Check and build image"]
+    types: [completed]
+
+jobs:
+  update_tag:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Get VERSION + SHA (from repo HEAD)
+        id: vars
+        run: |
+          VERSION=$(./gradlew -q printVersion)
+          SHA=$(git rev-parse --short HEAD)
+          echo "TAG=${VERSION}-${SHA}" >> $GITHUB_ENV
+
+      - name: Update Helm values.yaml
+        run: |
+          FILE="charts/student-app/values.yaml"
+          sed -i.bak "s/tag:.*/tag: ${TAG}/" "$FILE"
+          rm "$FILE.bak"
+
+      - name: Commit & push change
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+        run: |
+          git config --global user.email "ci-bot@github.com"
+          git config --global user.name "CI Bot"
+
+          git add charts/student-app/values.yaml
+          git commit -m "Deploy: update image tag to $TAG" || exit 0
+          git push https://anushagh-one2n:${GH_TOKEN}@github.com/anushagh-one2n/sre-bootcamp.git main

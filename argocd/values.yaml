@@ -1,0 +1,27 @@
+global:
+  nodeSelector:
+    type: dependent_service
+
+server:
+  nodeSelector:
+    type: dependent_service
+
+controller:
+  nodeSelector:
+    type: dependent_service
+
+repoServer:
+  nodeSelector:
+    type: dependent_service
+
+redis:
+  nodeSelector:
+    type: dependent_service
+
+applicationSet:
+  nodeSelector:
+    type: dependent_service
+
+configs:
+  params:
+    server.insecure: true

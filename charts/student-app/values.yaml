@@ -1,0 +1,35 @@
+application:
+  env: staging
+
+  image:
+    repository: anushahahaha/student-app
+    tag: 0.0.1-SNAPSHOT
+    pullPolicy: IfNotPresent
+    pullSecrets:
+      - dockerhub-creds
+
+  deployment:
+    replicaCount: 2
+
+  configMap:
+    port: "8080"
+    dbPort: "5432"
+    dbHost: "postgres.student-api-staging.svc.cluster.local"
+    dbName: "student-db"
+
+namespace: student-api-staging
+
+database:
+  image: postgres:15
+  name: student-db
+  port: 5432
+  url: "jdbc:postgresql://postgres:5432/student-db"
+
+ingress:
+  enabled: true
+  className: nginx
+  hosts:
+    - host: student-api.local
+      paths:
+        - path: /
+          pathType: Prefix

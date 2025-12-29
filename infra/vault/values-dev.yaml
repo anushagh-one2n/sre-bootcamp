@@ -1,0 +1,10 @@
+server:
+  dev:
+    enabled: true
+    devRootToken: "root"
+
+  dataStorage:
+    enabled: false
+
+  ui:
+    enabled: true
