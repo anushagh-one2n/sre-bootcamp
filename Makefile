@@ -22,6 +22,9 @@ help:
 	@echo "  make docker-down    - Stop all docker-compose services"
 	@echo "  make lint-check     - Run code formatting / linting (Spotless) check"
 	@echo "  make docker-push    - Push Docker image to registry"
+	@echo "  make docker-build-with-tag  - Build Docker image using VERSION-SHA"
+	@echo "  make docker-push-with-tag  - Push Docker image with VERSION-SHA to registry"
+
 
 build:
 	./gradlew clean build
@@ -61,3 +64,16 @@ docker-push:
 	@if [ -z "$(DOCKER_REPO)" ]; then echo "DOCKER_REPO must be set (e.g. myuser/student-app)"; exit 1; fi
 	docker tag $(IMAGE_TAG) $(DOCKER_REPO):$(VERSION)
 	docker push $(DOCKER_REPO):$(VERSION)
+
+
+docker-build-with-tag:
+	@if [ -z "$(DOCKER_REPO)" ]; then echo "DOCKER_REPO must be set"; exit 1; fi
+	@if [ -z "$(VERSION)" ]; then echo "VERSION must be set"; exit 1; fi
+	@if [ -z "$(SHA)" ]; then echo "SHA must be set"; exit 1; fi
+	docker build -t $(DOCKER_REPO):$(VERSION)-$(SHA) .
+
+docker-push-with-tag:
+	@if [ -z "$(DOCKER_REPO)" ]; then echo "DOCKER_REPO must be set"; exit 1; fi
+	@if [ -z "$(VERSION)" ]; then echo "VERSION must be set"; exit 1; fi
+	@if [ -z "$(SHA)" ]; then echo "SHA must be set"; exit 1; fi
+	docker push $(DOCKER_REPO):$(VERSION)-$(SHA)
